@@ -2,9 +2,13 @@ var iojs = new function () {
 	function MappingIoJsLib () {};
 
 	MappingIoJsLib.prototype.Lambda = function (input) {
-		function Lambda() {};
+		function Lambda() {}
 
+		// The internal state used by the lambda methods
 		Lambda.prototype._state = null;
+
+		// Used by average() and sum()
+		Lambda.prototype._defaultProjectionFunction = function (index, object) { return object; };
 
 		/**
 		 * Initialize the lambda object.
@@ -39,7 +43,7 @@ var iojs = new function () {
 			for (var i = 0; i < this._state.length; i++) {
 				var obj = this._state[i];
 
-				this._state[i] = callback.call(undefined, i, obj, args);
+				this._state[i] = callback.call(undefined, obj, args);
 			}
 
 			return this;
@@ -61,13 +65,13 @@ var iojs = new function () {
 				for (var i = 0; i < this._state.length; i++) {
 					var obj = this._state[i];
 
-					currentValue = callback.call(undefined, i, obj, currentValue, args);
+					currentValue = callback.call(undefined, obj, currentValue, args);
 				}
 			} else {
 				for (var i = this._state.length - 1; i >= 0; i--) {
 					var obj = this._state[i];
 
-					currentValue = callback.call(undefined, i, obj, currentValue, args);
+					currentValue = callback.call(undefined, obj, currentValue, args);
 				}
 			}
 
@@ -107,8 +111,30 @@ var iojs = new function () {
 			return this.foldl(accumulator, callback, args);
 		};
 
+		Lambda.prototype.filter = function (filterFunction, args) {
+			for (var i = 0; i < this._state.length; i++) {
+				var obj = this._state[i];
 
-		Lambda.prototype._defaultProjectionFunction = function (index, object) { return object; };
+				if (!filterFunction.call(undefined, obj, args)) {
+					this._state.splice(i, 1);
+					i--;
+				}
+			}
+
+			return this;
+		};
+
+		Lambda.prototype.reverse = function () {
+			this._state = this._state.reverse();
+
+			return this;
+		};
+
+		Lambda.prototype.sort = function (sortFunction) {
+			this._state = this._state.sort(sortFunction);
+
+			return this;
+		};
 
 		/**
 		 * Average -- convenience fold[l] operation.
@@ -148,31 +174,9 @@ var iojs = new function () {
 			return sum;
 		};
 
-		Lambda.prototype.filter = function (filterFunction) {
-			for (var i = 0; i < this._state.length; i++) {
-				var obj = this._state[i];
-
-				if (!filterFunction.call(undefined, i, obj)) {
-					this._state.splice(i, 1);
-					i--;
-				}
-			}
-
-			return this;
-		};
-
-		Lambda.prototype.reverse = function () {
-			this._state = this._state.reverse();
-
-			return this;
-		};
-
-		Lambda.prototype.sort = function (sortFunction) {
-			this._state = this._state.sort(sortFunction);
-
-			return this;
-		};
-
+		/**
+		 * Kick it back. Now kick back.
+		 */
 		return new Lambda().init(input);
 	};
 

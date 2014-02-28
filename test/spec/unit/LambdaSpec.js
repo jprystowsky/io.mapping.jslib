@@ -63,11 +63,23 @@ describe('Lambda', function () {
 			var input = [1, 2, 3],
 				expectedOutput = [1, 4, 9];
 
-			var lambda = iojs.Lambda(input).map(function (i, v) {
+			var output = iojs.Lambda(input).map(function (v) {
 				return v * v;
-			});
+			}).toArray();;
 
-			expect(lambda.toArray()).toEqual(expectedOutput);
+			expect(output).toEqual(expectedOutput);
+		});
+
+		it('should pass along arguments', function () {
+			var input = [1, 2, 3],
+				multiplier = 10,
+				expectedOutput = [10, 20, 30];
+
+			var output = iojs.Lambda(input).map(function (v, t) {
+				return v * t;
+			}, multiplier).toArray();
+
+			expect(output).toEqual(expectedOutput);
 		});
 	});
 
@@ -87,7 +99,7 @@ describe('Lambda', function () {
 			var input = [1, 2, 3],
 				expectedOutput = 6;
 
-			var output = iojs.Lambda(input).fold(0, function (i, v, c) {
+			var output = iojs.Lambda(input).fold(0, function (v, c) {
 				return c + v;
 			});
 
@@ -98,12 +110,24 @@ describe('Lambda', function () {
 			var input = ['one', 'two', 'three'],
 				expectedOutput = 'onetwothree';
 
-			var output = iojs.Lambda(input).fold('', function (i, v, c) {
+			var output = iojs.Lambda(input).fold('', function (v, c) {
 				return c + v;
 			});
 
 			expect(output).toEqual(expectedOutput);
-		})
+		});
+
+		it('should pass along additional arguments', function () {
+			var input = [0, 2, 4],
+				letterArray = ['a', 'b', 'c', 'd', 'e'],
+				expectedOutput = 'ace';
+
+			var output = iojs.Lambda(input).fold('', function (v, cV, lA) {
+				return cV + lA[v];
+			}, letterArray);
+
+			expect(output).toEqual(expectedOutput);
+		});
 	});
 
 	describe('foldr', function () {
@@ -122,9 +146,21 @@ describe('Lambda', function () {
 			var input = ['one', 'two', 'three'],
 				expectedOutput = 'threetwoone';
 
-			var output = iojs.Lambda(input).foldr('', function (i, v, c) {
+			var output = iojs.Lambda(input).foldr('', function (v, c) {
 				return c + v;
 			});
+
+			expect(output).toEqual(expectedOutput);
+		});
+
+		it('should pass along additional arguments', function () {
+			var input = [0, 2, 4],
+				letterArray = ['a', 'b', 'c', 'd', 'e'],
+				expectedOutput = 'eca';
+
+			var output = iojs.Lambda(input).foldr('', function (v, cV, lA) {
+				return cV + lA[v];
+			}, letterArray);
 
 			expect(output).toEqual(expectedOutput);
 		});
@@ -135,7 +171,7 @@ describe('Lambda', function () {
 			var input = [1, 2, 3],
 				expectedOutput = [2];
 
-			var output = iojs.Lambda(input).filter(function (i, x) { return x == 2; }).toArray();
+			var output = iojs.Lambda(input).filter(function (x) { return x == 2; }).toArray();
 
 			expect(output).toEqual(expectedOutput);
 		});
@@ -143,9 +179,21 @@ describe('Lambda', function () {
 		it('should deny for false', function () {
 			var input = [1, 2, 3];
 
-			var output = iojs.Lambda(input).filter(function (i, x) { return false; }).toArray();
+			var output = iojs.Lambda(input).filter(function () { return false; }).toArray();
 
 			expect(output).toEqual([]);
+		});
+
+		it('should pass along arguments', function () {
+			var input = [1, 2, 3],
+				allow = 2,
+				expectedOutput = [2];
+
+			var output = iojs.Lambda(input).filter(function (v, a) {
+				return v == a;
+			}, allow).toArray();
+
+			expect(output).toEqual(expectedOutput);
 		});
 	});
 
