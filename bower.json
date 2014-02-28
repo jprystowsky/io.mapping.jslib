@@ -1,0 +1,21 @@
+{
+  "name": "io.mapping.jslib",
+  "version": "0.0.0",
+  "authors": [
+    "Jacob Prystowsky <jacob@mapping.io>"
+  ],
+  "description": "A helpful JavaScript library for AngularJS applications",
+  "main": "index.js",
+  "license": "MIT",
+  "homepage": "example.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "angular": "~1.2.13",
+    "jasmine": "~2.0.0"
+  }
+}
