@@ -15,6 +15,36 @@ describe('Lambda', function () {
 
 			expect(outArray).toEqual([input]);
 		});
+
+		it('should not affect an input array', function () {
+			var input = [1, 2, 3],
+				expectedOutput = [1, 2, 3];
+
+			var lambda = iojs.Lambda(input);
+			lambda._state[0]++;
+
+			expect(input).toEqual(expectedOutput);
+		});
+
+		it('should not affect an input singleton integer', function () {
+			var input = 1,
+				expectedOutput = 1;
+
+			var lambda = iojs.Lambda(input);
+			lambda._state[0]++;
+
+			expect(input).toEqual(expectedOutput);
+		});
+
+		it('should not affect an input singleton object', function () {
+			var input = { x: 1 },
+				expectedOutput = { x: 1 };
+
+			var lambda = iojs.Lambda(input);
+			lambda._state[0]['x']++;
+
+			expect(input).toEqual(expectedOutput);
+		});
 	});
 
 	describe('map', function () {

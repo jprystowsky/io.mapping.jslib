@@ -15,7 +15,7 @@ var iojs = new function () {
 			if (angular.isArray(input)) {
 				this._state = angular.copy(input);
 			} else {
-				this._state = [input];
+				this._state = [angular.copy(input)];
 			}
 
 			return this;
