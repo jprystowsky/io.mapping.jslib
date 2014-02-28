@@ -34,3 +34,8 @@ destroyed.
 Every lambda method tries to return something useful, whether it be an aggregate value (e.g., in `fold` or `sum`) or
 the object itself (in the case of `map`, among others), where further lambda operations may be desired). It's worth
 noting that lambda methods are generally non-idempotent, as methods manipulate the internal state.
+
+## Contributing
+
+I welcome contributions! Please ensure that any changes you submit are adequately covered by unit tests. See the
+existing codebase for examples of how this should be done.
