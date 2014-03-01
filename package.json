@@ -1,6 +1,6 @@
 {
   "name": "io.mapping.jslib",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A helpful JavaScript library for AngularJS applications",
   "main": "index.js",
   "scripts": {
