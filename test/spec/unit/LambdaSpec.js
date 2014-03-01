@@ -230,7 +230,47 @@ describe('Lambda', function () {
 			var input = [{a: 1, b: 3}, {a: 2, b: 1}, {a: 3, b: 2}],
 				expectedOutput = [{a: 2, b: 1}, {a: 3, b: 2}, {a: 1, b: 3}];
 
-			var output = iojs.Lambda(input).sort(function (x, y) {return y.b < x.b ? 1 : y.b === x.b ? 0 : -1;}).toArray();
+			var output = iojs.Lambda(input).sort(function (x, y) {return x.b > y.b ? 1 : x.b === y.b ? 0 : -1;}).toArray();
+
+			expect(output).toEqual(expectedOutput);
+		});
+	});
+
+	describe('sum', function () {
+		it('should add up integers', function () {
+			var input = [1, 2, 3],
+				expectedOutput = 6;
+
+			var output = iojs.Lambda(input).sum();
+
+			expect(output).toEqual(expectedOutput);
+		});
+
+		it('should use a custom projection', function () {
+			var input = [{ name: "Alice", key: 128 }, { name: "Bob", key: 128 }],
+				expectedOutput = 256;
+
+			var output = iojs.Lambda(input).sum(function (i) { return i.key; });
+
+			expect(output).toEqual(expectedOutput);
+		});
+	});
+
+	describe('average', function () {
+		it('should average numbers', function () {
+			var input = [5, 10],
+				expectedOutput = 7.5;
+
+			var output = iojs.Lambda(input).average();
+
+			expect(output).toEqual(expectedOutput);
+		});
+
+		it('should use a custom projection', function () {
+			var input = [[3], [7]],
+				expectedOutput = 5;
+
+			var output = iojs.Lambda(input).average(function (x) { return x[0]; });
 
 			expect(output).toEqual(expectedOutput);
 		});

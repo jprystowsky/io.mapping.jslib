@@ -8,7 +8,7 @@ var iojs = new function () {
 		Lambda.prototype._state = null;
 
 		// Used by average() and sum()
-		Lambda.prototype._defaultProjectionFunction = function (index, object) { return object; };
+		Lambda.prototype._identityProjectionFunction = function (object) { return object; };
 
 		/**
 		 * Initialize the lambda object.
@@ -136,46 +136,35 @@ var iojs = new function () {
 			return this;
 		};
 
+		Lambda.prototype.sum = function (projectionFunction) {
+			if (!angular.isFunction(projectionFunction)) {
+				projectionFunction = this._identityProjectionFunction;
+			}
+
+			return this.fold(0, function (obj, current) {
+				return projectionFunction.call(undefined, obj) + current;
+			});
+		};
+
 		/**
 		 * Average -- convenience fold[l] operation.
 		 * @param projectionFunction
 		 * @returns {number}
 		 */
 		Lambda.prototype.average = function (projectionFunction) {
-			var avg = 0;
-
 			if (!angular.isFunction(projectionFunction)) {
-				projectionFunction = this._defaultProjectionFunction;
+				projectionFunction = this._identityProjectionFunction;
 			}
 
-			var i;
-			for (i = 0; i < this._state.length; i++) {
-				var obj = this._state[i];
+			var length = this._state.length;
 
-				avg += projectionFunction.call(undefined, i, obj, avg);
-			}
-
-			return avg / i;
+			return this.sum(projectionFunction) / length;
 		};
 
-		Lambda.prototype.sum = function (projectionFunction) {
-			var sum = 0;
 
-			if (!angular.isFunction(projectionFunction)) {
-				projectionFunction = this._defaultProjectionFunction;
-			}
-
-			for (var i = 0; i < this._state.length; i++) {
-				var obj = this._state[i];
-
-				sum += projectionFunction(i, obj, sum);
-			}
-
-			return sum;
-		};
 
 		/**
-		 * Kick it back. Now kick back.
+		 * Kick it back. Then kick back.
 		 */
 		return new Lambda().init(input);
 	};

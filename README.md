@@ -107,6 +107,12 @@ var justPrices = lmda.map(function (product) {
 });
 ```
 
+### foldl
+
+### foldr
+
+### fold
+
 ### filter(filterFunction\[, args\])
 
 Filter `lmda` by removing elements that fail to return `true` when `filterFunction(element[, args])` is called for each
@@ -130,6 +136,110 @@ var justAcme  = lmda.filter(function (product) {
 	return product.manufacturer == "Acme, Inc.";
 });
 ```
+
+### reverse()
+
+```
+// reversed will look like:
+// [
+//	{
+//		id: 53,
+//		name: "Part 1",
+//		manufacturer: "PartSoft",
+//		price: 0.99
+//	},
+//	{
+//		id: 4310,
+//		name: "Dongle B",
+//		manufacturer: "Beta Co..",
+//		price: 40
+//	},
+//	{
+//		id: 4309,
+//		name: "Dongle A",
+//		manufacturer: "Beta Co.",
+//		price: 20
+//	},
+//	{
+//		id: 2712,
+//		name: "Widget B",
+//		manufacturer: "Acme, Inc.",
+//		price: 75
+//	},
+// 	{
+// 		id: 2319,
+// 		name: "Widget A",
+//		manufacturer: "Acme, Inc.",
+//		price: 50
+//	}
+//];
+var reversed = lmda.reverse().toArray();
+```
+
+Reverse the elements of `lmda`.
+
+### sort(\[sortfunction\])
+
+Sort the elements of `lmda` using the default sort (for default-sortable values), or optionally by using a custom
+`function (a, b)` returning `1`, `0`, or `-1` (`a` greater than, equal to, or less than `b`, respectively).
+
+```
+// sorted will look like:
+// [
+//	{
+//		id: 53,
+//		name: "Part 1",
+//		manufacturer: "PartSoft",
+//		price: 0.99
+//	},
+// 	{
+// 		id: 2319,
+// 		name: "Widget A",
+//		manufacturer: "Acme, Inc.",
+//		price: 50
+//	},
+//	{
+//		id: 2712,
+//		name: "Widget B",
+//		manufacturer: "Acme, Inc.",
+//		price: 75
+//	},
+//	{
+//		id: 4309,
+//		name: "Dongle A",
+//		manufacturer: "Beta Co.",
+//		price: 20
+//	},
+//	{
+//		id: 4310,
+//		name: "Dongle B",
+//		manufacturer: "Beta Co..",
+//		price: 40
+//	}
+//];
+var sorted = lmda.sort(function (productA, productB) {
+	return productA.id > productB.id ? 1 : productA.id == productB.id ? 0 : -1;
+}).toArray();
+```
+
+### sum(\[projectionFunction\])
+
+A convenience method written internally using `fold`, `sum()` will perform an arithmetic sum over `lmda`.
+When provided `projectionFunction`, of signature `function (input)` returning a `+`-able value, that function will
+be called to project values to be summed.
+
+```
+// sum will be 185.99
+var sum = lmda.sum(function (val) {
+	return val.price;
+});
+```
+
+### average(\[projectionFunction\])
+
+Average the values of `lmda`. Called as `average()`, perform an arithmetic average (written using `sum`). When called
+with `projectionFunction`, `function (input)` returning a `+`-able value, that function will be called to project
+values to be summed prior to being averaged.
 
 ## Contributing
 
