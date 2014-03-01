@@ -40,23 +40,22 @@ module.exports = function (grunt) {
 				configFile: 'test/conf/karma.conf.js',
 				singleRun: true
 			}
+		},
+
+		bump: {
+			options: {
+				files: ['{package,bower}.json'],
+				updateConfigs: ['pkg'],
+				commit: true,
+				commitFiles: ['-a'],
+				createTag: true,
+				push: true,
+				pushTo: 'upstream'
+			}
 		}
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-mkdir');
-	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-karma');
+	require('load-grunt-tasks')(grunt);
 
-	grunt.registerTask('test', [
-		'karma'
-	]);
-
-	grunt.registerTask('compile', [
-		'clean:dist',
-		'mkdir:dist',
-		'uglify:src'
-	]);
+	grunt.loadTasks('tasks');
 };
