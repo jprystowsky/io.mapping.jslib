@@ -1,4 +1,4 @@
-# io.mapping.jslib: A helpful JavaScript library for AngularJS applications
+# io.mapping.jslib: A helpful JavaScript library for AngularJS applications [![Build Status](https://travis-ci.org/jprystowsky/io.mapping.jslib.png?branch=master)](https://travis-ci.org/jprystowsky/io.mapping.jslib)
 
 Nota bene: This is heavily under development!
 
