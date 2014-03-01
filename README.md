@@ -139,6 +139,8 @@ var justAcme  = lmda.filter(function (product) {
 
 ### reverse()
 
+Reverse the elements of `lmda`.
+
 ```
 // reversed will look like:
 // [
@@ -175,8 +177,6 @@ var justAcme  = lmda.filter(function (product) {
 //];
 var reversed = lmda.reverse().toArray();
 ```
-
-Reverse the elements of `lmda`.
 
 ### sort(\[sortfunction\])
 
