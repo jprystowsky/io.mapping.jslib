@@ -1,61 +1,25 @@
 module.exports = function (grunt) {
-	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
+	function loadConfig (path) {
+		var glob = require('glob');
+		var object = {};
+		var key;
 
-		clean: {
-			dist: ['dist']
-		},
+		glob.sync('*', {cwd: path}).forEach(function(option) {
+			key = option.replace(/\.js$/,'');
+			object[key] = require(path + option);
+		});
 
-		mkdir: {
-			dist: {
-				options: {
-					mode: 0700,
-					create: ['dist']
-				}
-			}
-		},
+		return object;
+	}
 
-		uglify: {
-			src: {
-				files: {
-					'dist/io.mapping.jslib.min.js' : ['src/**/*.js']
-				}
-			}
-		},
+	var config = {
+		pkg: grunt.file.readJSON('package.json')
+	};
 
-		watch: {
-			karma: {
-				files: [
-					'src/**/*.js',
-					'test/spec/**/*Spec.js'
-				],
-				tasks: [
-					'karma:unit:run'
-				]
-			}
-		},
-
-		karma: {
-			unit: {
-				configFile: 'test/conf/karma.conf.js',
-				singleRun: true
-			}
-		},
-
-		bump: {
-			options: {
-				files: ['{package,bower}.json'],
-				updateConfigs: ['pkg'],
-				commit: true,
-				commitFiles: ['-a'],
-				createTag: true,
-				push: true,
-				pushTo: 'upstream'
-			}
-		}
-	});
+	grunt.util._.extend(config, loadConfig ('./grunt/options/'));
+	grunt.initConfig(config);
 
 	require('load-grunt-tasks')(grunt);
 
-	grunt.loadTasks('tasks');
+	grunt.loadTasks('grunt/tasks');
 };
